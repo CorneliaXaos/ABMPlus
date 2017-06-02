@@ -8,8 +8,17 @@ namespace AssetBundles
 {
 	public static class Utility
 	{
-		public const string AssetBundlesOutputPath = "AssetBundles";
+		#region Constants
 
+		public const string ASSET_BUNDLES_OUTPUT_PATH = "AssetBundles";
+
+		#endregion
+
+		#region Public Interface
+
+		/**
+		 * Converts the Unity BuildTarget / Platform Name into a C# String.
+		 */
 		public static string GetPlatformName ()
 		{
 			#if UNITY_EDITOR
@@ -19,7 +28,44 @@ namespace AssetBundles
 			#endif
 		}
 
+		public static string GetExecutableName (BuildTarget target)
+		{
+			switch (target) {
+				case BuildTarget.Android:
+					return "/test.apk";
+				case BuildTarget.StandaloneLinux:
+					return "/test.x86";
+				case BuildTarget.StandaloneLinux64:
+					return "/test.x86_64";
+				case BuildTarget.StandaloneLinuxUniversal:
+					return "/test.bin";
+				case BuildTarget.StandaloneOSXIntel:
+				case BuildTarget.StandaloneOSXIntel64:
+				case BuildTarget.StandaloneOSXUniversal:
+					return "/test.app";
+				case BuildTarget.StandaloneWindows:
+				case BuildTarget.StandaloneWindows64:
+					return "/test.exe";
+				case BuildTarget.WebPlayer:
+				case BuildTarget.WebPlayerStreamed:
+				case BuildTarget.WebGL:
+				case BuildTarget.iOS:
+					return "";
+			// Add more build targets for your own.
+				default:
+					Debug.LogError ("Target not implemented.");
+					return null;
+			}
+		}
+
+		#endregion
+
+		#region Private Interface
+
 		#if UNITY_EDITOR
+		/**
+		 * Stringifies the BuildTarget.  Results are identical to the RuntimePlatform variant of this method.
+		 */
 		private static string GetPlatformForAssetBundles (BuildTarget target)
 		{
 			switch (target) {
@@ -53,6 +99,9 @@ namespace AssetBundles
 		}
 		#endif
 
+		/**
+		 * Stringifies the RuntimePlatform.  Results are identical to the BuildTarget variant of this method.
+		 */
 		private static string GetPlatformForAssetBundles (RuntimePlatform platform)
 		{
 			switch (platform) {
@@ -80,5 +129,7 @@ namespace AssetBundles
 					return null;
 			}
 		}
+
+		#endregion
 	}
 }
